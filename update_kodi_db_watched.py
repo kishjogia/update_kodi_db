@@ -1,7 +1,9 @@
 # ToDo
-# [x] 1. Connect to Kodi MySQL DB
+# [x] 1. Connect to a Kodi MySQL DB
 # [x] 2. Get the correct id for the path
-# [ ] 3. Increase the playCount of files
+# [x] 3. Increase the playCount of files
+# [ ] 4. Have the db information in a file
+# [ ] 5. Connect to remote Kodi MySQL DB
 
 import mysql.connector
 
@@ -21,7 +23,7 @@ def connect_database():
     return connection
 
 def close_database(db_connection):
-    db_connection.close()
+    db_connection.close()                       # close connection to DB
 
     return
 
@@ -39,9 +41,23 @@ def update_played_count(db_connection):
         for row in rows:
             path_id = row[0]
 
-            # Update the playCount for all files in the right directory to 1
-            sql_str = "UPDATE files SET playCount = 1 WHERE idPath = " + str(path_id)
+            sql_str = "SELECT idFile, playCount FROM files WHERE idPath = " + str(path_id)
             cursor.execute(sql_str)
+            blocks = cursor.fetchall()
+
+            # Increment the playCount of films matching this path
+            for block in blocks:
+                film_id = block[0]
+                if block[1] == None:
+                    film_playCount = 1
+                else:
+                    film_playCount = block[1] + 1
+
+                # Update the playCount for all files
+                sql_str = "UPDATE files SET playCount = " + str(film_playCount) + " WHERE idFile = " + str(film_id)
+                cursor.execute(sql_str)
+
+            # Appling changes to DB
             db_connection.commit()
 
     cursor.close()
