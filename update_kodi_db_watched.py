@@ -2,23 +2,29 @@
 # [x] 1. Connect to a Kodi MySQL DB
 # [x] 2. Get the correct id for the path
 # [x] 3. Increase the playCount of files
-# [ ] 4. Have the db information in a file
+# [x] 4. Have the db information in a file
 # [ ] 5. Connect to remote Kodi MySQL DB
 
 import mysql.connector
 
-config = {
-    'user': 'kodi',
-    'password': 'kodi',
-    'database': 'MyVideos116',
-    'host': '127.0.0.1'
-}
-movie_path = '/Multimedia/Movies/'
+# Config moved to options file
+#config = {
+#    'user': 'kodi',
+#    'password': 'kodi',
+#    'database': 'MyVideos116',
+#    'host': '127.0.0.1'
+#}
+mysql_option_file = 'mysql_config.cnf'      # mysql options file, assume it is in the same directory
+movie_path = '/Multimedia/Movies/'          # path of the Moives that have been watched
 
 def connect_database():
-    connection = mysql.connector.connect(**config)          # connect to the DB usinf parameters in config
+    #connection = mysql.connector.connect(**config)          # connect to the DB usinf parameters in config
+    connection = mysql.connector.connect(option_files=mysql_option_file)
 
-    print ('DB connection opened to ', config['database'], '@', config['host'])
+    if connection:
+        print ('DB connection open')
+    else:
+        print ('Failed to connect to DB')
 
     return connection
 
