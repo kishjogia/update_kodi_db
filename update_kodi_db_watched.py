@@ -9,16 +9,16 @@ import mysql.connector
 
 # Config moved to options file
 #config = {
-#    'user': 'kodi',
-#    'password': 'kodi',
+#    'user': 'kodi_admin',
+#    'password': 'kodi_admin',
 #    'database': 'MyVideos116',
-#    'host': '127.0.0.1'
+#    'host': '192.168.1.199'
 #}
 mysql_option_file = 'mysql_config.cnf'      # mysql options file, assume it is in the same directory
 movie_path = '/Multimedia/Movies/'          # path of the Moives that have been watched
 
 def connect_database():
-    #connection = mysql.connector.connect(**config)          # connect to the DB usinf parameters in config
+#    connection = mysql.connector.connect(**config)          # connect to the DB usinf parameters in config
     connection = mysql.connector.connect(option_files=mysql_option_file)
 
     if connection:
