@@ -12,7 +12,7 @@ import sqlite3
 USE_MYSQL = False
 
 #local_db_path = "/home/kishj/.kodi/userdata/Database/MyVideos116.db"
-local_db_path = /data/data/com.termux/files/home/storage/shared/Android/data/org.xbmc.kodi/files/.kodi/userdata/Database/MyVideos116.db"
+local_db_path = "/data/data/com.termux/files/home/storage/shared/Android/data/org.xbmc.kodi/files/.kodi/userdata/Database/MyVideos116.db"
 
 mysql_option_file = 'mysql_config.cnf'      # mysql options file, assume it is in the same directory
 movie_path = '/Multimedia/Movies/'          # path of the Moives that have been watched
