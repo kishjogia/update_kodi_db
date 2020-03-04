@@ -3,29 +3,32 @@
 # [x] 2. Get the correct id for the path
 # [x] 3. Increase the playCount of files
 # [x] 4. Have the db information in a file
-# [ ] 5. Connect to remote Kodi MySQL DB
+# [x] 5. Add ability update local Kodi DB
+# [x] 6. Connect to remote Kodi MySQL DB
 
 import mysql.connector
+import sqlite3
 
-# Config moved to options file
-#config = {
-#    'user': 'kodi_admin',
-#    'password': 'kodi_admin',
-#    'database': 'MyVideos116',
-#    'host': '192.168.1.199'
-#}
+USE_MYSQL = False
+
+#local_db_path = "/home/kishj/.kodi/userdata/Database/MyVideos116.db"
+local_db_path = /data/data/com.termux/files/home/storage/shared/Android/data/org.xbmc.kodi/files/.kodi/userdata/Database/MyVideos116.db"
+
 mysql_option_file = 'mysql_config.cnf'      # mysql options file, assume it is in the same directory
 movie_path = '/Multimedia/Movies/'          # path of the Moives that have been watched
 
 def connect_database():
 #    connection = mysql.connector.connect(**config)          # connect to the DB usinf parameters in config
-    connection = mysql.connector.connect(option_files=mysql_option_file)
+    if USE_MYSQL:
+        connection = mysql.connector.connect(option_files=mysql_option_file)
+    else:
+        connection = sqlite3.connect(local_db_path)
 
     if connection:
         print ('DB connection open')
     else:
         print ('Failed to connect to DB')
-
+    
     return connection
 
 def close_database(db_connection):
@@ -34,7 +37,11 @@ def close_database(db_connection):
     return
 
 def update_played_count(db_connection):
-    cursor = db_connection.cursor(buffered = True)
+    if USE_MYSQL:
+        cursor = db_connection.cursor(buffered = True)
+    else:
+        cursor = db_connection.cursor()
+
     # Get the id for the correct path that needs to have the values updated
     sql_str = "SELECT idPath, strPath FROM path WHERE strPath LIKE '%" + movie_path + "%'"
     cursor.execute(sql_str)
@@ -74,8 +81,9 @@ def update_played_count(db_connection):
 # Main
 #********
 
-cnx = connect_database()
+if __name__ == "__main__":
+    cnx = connect_database()
 
-update_played_count(cnx)
+    update_played_count(cnx)
 
-close_database(cnx)
+    close_database(cnx)
